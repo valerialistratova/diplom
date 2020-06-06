@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: lectio
+      MYSQL_USER: 'user'
+    ports:
+      - "3306:3306"
+    expose:
+      - '3306'
+    volumes:
+      - my-db:/var/lib/mysql
+      - D:\diplom\lectio-web-20200531T074058Z-001\lectio-web\project\project_data\dump-lectio.sql:/docker-entrypoint-initdb.d/dump.sql
+
+volumes:
+  my-db:

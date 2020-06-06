@@ -1,0 +1,6 @@
+<script src="{{ url_for('static', filename='js/lecto/add-to-fav.js' ) }}"></script>
+<div id="bookmarks-container">
+    {% for book in books %}
+        {% include 'parts/recommend-item.html' %}
+    {% endfor %}
+</div>

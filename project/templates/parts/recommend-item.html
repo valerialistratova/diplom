@@ -1,0 +1,14 @@
+<div class="recommend-item">
+    <div class="uk-grid">
+        <div class="uk-width-3-4">
+            <img class="book-pic" src="{{ url_for('get_image', category='book', filename=book[0].photo) }}" width="128">
+            <div class="book-title">{{ book[0].title }}</div>
+        </div>
+
+        <div class="uk-width-1-4">
+            <button class="uk-button button-heart favorite {% if book.faved_id > 0 %} like {% endif %}" {% if book.faved_id != 0 %} data-faved-id="{{ book.faved_id }}" {% endif %} id="button-like-{{ book[0].book_id }}" data-uk-toggle="{target:'#button-like-{{ book[0].book_id }}', cls:'like'}">
+                <i class="uk-icon-medium uk-icon-heart-o"></i>
+            </button>
+        </div>
+    </div>
+</div>

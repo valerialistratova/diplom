@@ -1,0 +1,12 @@
+<script src="{{ url_for('static', filename='js/lecto/rate-book.js' ) }}"></script>
+<div id="history-container">
+{% for month in books.keys() %}
+    <div class="month-history">
+    <h2>{{ month.decode('1251') }}</h2>
+    <hr>
+    {% for book in books[month] %}
+        {% include 'parts/history-item.html' %}
+    {% endfor %}
+    </div>
+{% endfor %}
+</div>

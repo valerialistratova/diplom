@@ -1,0 +1,74 @@
+<!doctype html>
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='fonts/MyFontsWebfontsKit1/MyFontsWebfontsKit.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/uikit.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/override-ui.css') }}">
+    <script src="{{ url_for('static', filename='js/jquery-2.1.1.js' ) }}"></script>
+    <script src="{{ url_for('static', filename='js/uikit.js' ) }}"></script>
+    <script src="{{ url_for('static', filename='js/raphael-min.js' ) }}"></script>
+    <script src="{{ url_for('static', filename='js/lecto/history-graph.js' ) }}"></script>
+    <script src="{{ url_for('static', filename='js/lecto/page-controller.js' ) }}"></script>
+    <title>Lecto</title>
+</head>
+<body>
+<header>
+    <div class="uk-grid">
+        <div class="uk-width-1-1 upper-nav">
+            <div class="uk-grid">
+                <div class="uk-width-1-2">
+                    <img src="{{ url_for('static', filename='img/logo.png') }}" width="50" id="logo">
+                    <h1>Lecto</h1>
+                </div>
+                {% if user %}
+                <div class="uk-width-1-2 user_profile">
+                    <div data-uk-dropdown="{mode:'click'}">
+                        <div>
+                            <div class="userpic">
+                                <span class="user-name">{{ user.name }}</span>
+                                <img src="{{ url_for('get_image', category='user', filename=user.photo) }}" width="60" height="60">
+                                <i class="uk-icon-caret-down"></i>
+                            </div>
+
+                        </div>
+
+                        <div class="uk-dropdown">
+                            <ul class="uk-nav uk-nav-dropdown">
+                                <li><a href="#">Налаштування</a></li>
+                                <li><a href="{{ url_for('logout') }}">Вихід</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+    </div>
+</header>
+<div class="page">
+    {% block body %}{% endblock %}
+</div>
+{% if user %}
+<footer>
+    <div class="uk-grid uk-grid-preserve bottom-nav">
+        <div class="buttons">
+            <a href="#recommendation"><div class="button-icon recommendation">
+                <i class="uk-icon-large uk-icon-book"></i>
+                <div class="uk-badge uk-badge-notification">{{ counters['recommended'] }}</div>
+            </div></a>
+            <a href="#bookmarks"><div class="button-icon bookmarks">
+                <i class="uk-icon-large uk-icon-bookmark"></i>
+                <div class="uk-badge uk-badge-notification">{{ counters['bookmarks'] }}</div>
+            </div></a>
+            <a href="#history"><div class="button-icon history">
+                <i class="uk-icon-large uk-icon-tasks"></i>
+                <div class="uk-badge uk-badge-notification">{{ counters['history'] }}</div>
+            </div></a>
+        </div>
+
+    </div>
+</footer>
+{% endif %}
+</body>
+</html>

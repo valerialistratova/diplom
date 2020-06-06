@@ -1,0 +1,28 @@
+/**
+ * @license
+ * MyFonts Webfont Build ID 2809839, 2014-05-11T13:10:50-0400
+ * 
+ * The fonts listed in this notice are subject to the End User License
+ * Agreement(s) entered into by the website owner. All other parties are 
+ * explicitly restricted from using the Licensed Webfonts(s).
+ * 
+ * You may obtain a valid license at the URLs below.
+ * 
+ * Webfont: Brutal Type Extra Light by Brownfox
+ * URL: http://www.myfonts.com/fonts/brownfox/brutal-type/extra-light/
+ * Copyright: Copyright (c) 2013 by Gayane Bagdasaryan, Dmitry Rastvortsev. All rights reserved.
+ * Licensed pageviews: 10,000
+ * 
+ * 
+ * License: http://www.myfonts.com/viewlicense?type=web&buildid=2809839
+ * 
+ * © 2014 MyFonts Inc
+*/
+
+
+/* @import must be at top of file, otherwise CSS will not work */
+@import url("//hello.myfonts.net/count/2adfef");
+
+  
+@font-face {font-family: 'BrutalType-ExtraLight';src: url('webfonts/2ADFEF_0_0.eot');src: url('webfonts/2ADFEF_0_0.eot?#iefix') format('embedded-opentype'),url('webfonts/2ADFEF_0_0.woff') format('woff'),url('webfonts/2ADFEF_0_0.ttf') format('truetype');}
+ 

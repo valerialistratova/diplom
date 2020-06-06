@@ -1,0 +1,28 @@
+/**
+ * @license
+ * MyFonts Webfont Build ID 2809841, 2014-05-11T13:23:01-0400
+ * 
+ * The fonts listed in this notice are subject to the End User License
+ * Agreement(s) entered into by the website owner. All other parties are 
+ * explicitly restricted from using the Licensed Webfonts(s).
+ * 
+ * You may obtain a valid license at the URLs below.
+ * 
+ * Webfont: Lytiga Pro by Mint Type
+ * URL: http://www.myfonts.com/fonts/konstantynov/lytiga-pro/regular/
+ * Copyright: Copyright (c) 2012 by Andriy Konstantynov. All rights reserved.
+ * Licensed pageviews: 10,000
+ * 
+ * 
+ * License: http://www.myfonts.com/viewlicense?type=web&buildid=2809841
+ * 
+ * © 2014 MyFonts Inc
+*/
+
+
+/* @import must be at top of file, otherwise CSS will not work */
+@import url("//hello.myfonts.net/count/2adff1");
+
+  
+@font-face {font-family: 'LytigaPro-Regular';src: url('webfonts/2ADFF1_0_0.eot');src: url('webfonts/2ADFF1_0_0.eot?#iefix') format('embedded-opentype'),url('webfonts/2ADFF1_0_0.woff') format('woff'),url('webfonts/2ADFF1_0_0.ttf') format('truetype');}
+ 

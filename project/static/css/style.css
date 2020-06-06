@@ -1,0 +1,187 @@
+/**
+    184, 230, 39 - green
+    229, 247, 148 - light olive
+    74, 74, 74 - mid grey
+    36, 36, 36 - dark grey
+    #f1f0f6 - background light blue
+    #af7875 - red
+*/
+
+body {
+    background: #f1f0f6;
+    font-family: LytigaPro-Regular;
+	font-weight: normal;
+	font-style: normal;
+}
+
+h1, h2, h3 {
+    font-family: LytigaPro-Regular;
+}
+
+h1 {
+    display: inline;
+}
+
+h2 {
+    margin-top: 25px;
+}
+
+.page {
+    margin-bottom: 50px;
+}
+
+div.upper-nav {
+    background: rgb(36, 36, 36);
+    color: #ffffff;
+    height: 70px;
+}
+
+div.user_profile {
+    padding-right: 5px;
+    text-align: right;
+    position: relative;
+}
+
+div.user_profile .uk-dropdown {
+    position: relative;
+    float: right;
+}
+
+div.userpic {
+    padding-top: 5px;
+}
+
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    margin: 0;
+    background: rgb(36, 36, 36);
+    color: #fff;
+    width: 100%;
+    height: 50px;
+
+}
+
+.bottom-nav .buttons {
+    left: 50%;
+    margin-left: -210px;
+    position: relative;
+}
+
+.bottom-nav .buttons div {
+    display: inline-block;
+}
+
+.bottom-nav .button-icon {
+    width: 80px;
+    padding: 5px 5px 5px 5px;
+    text-align: center;
+}
+
+.bottom-nav .button-icon:hover {
+    background: rgb(74, 74, 74);
+}
+
+.bottom-nav .button-icon.active{
+    background: rgb(80, 80, 80);
+}
+
+.button-icon .uk-badge {
+    position: relative;
+    top: -20px;
+}
+
+.button-icon i {
+    color: #fff;
+}
+
+.history-item {
+    background: #fff;
+    width: 348px;
+    padding: 15px;
+    display: inline-block;
+    margin-right: 10px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    height: 220px;
+}
+
+.recommend-item {
+    background: #fff;
+    width: 248px;
+    padding: 15px;
+    display: inline-block;
+    margin-right: 10px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    height: 220px;
+}
+
+.button-heart, .button-heart:focus {
+    background: #fff;
+}
+
+.button-heart.like, .button-heart:hover {
+    color: rgb(184, 230, 39);
+    background: #fff;
+}
+
+#history {
+    margin-left: 15px;
+}
+
+.uk-button.rating {
+    min-width: 32%;
+    margin-bottom: 30px;
+}
+
+.uk-button.rating.positive.uk-active {
+    background: rgb(184, 230, 39);
+}
+
+.uk-button.rating.negative.uk-active {
+    background: #af7875;
+}
+
+#logo {
+    margin-top: 7.5px;
+    margin-left: 7.5px;
+}
+
+#loading {
+    background: url('../img/loading.gif');
+    width: 200px;
+    height: 200px;
+    margin: 200px auto;
+}
+
+#loading.hidden {
+    display: none !important;
+}
+
+.uk-grid.login-form {
+    background: url('../img/bg.jpg');
+    padding: 100px;
+    color: #fff;
+    margin-top: 100px;
+}
+
+.login-form h1 {
+    color: #fff;
+}
+
+.login-form p {
+    font-size: 1.4em;
+    line-height: 1.4em;
+}
+
+.flash {
+    background: #CEE5F5;
+    padding: 0.5em;
+    border: 1px solid #AACBE2;
+}
+
+.error {
+    background: #F0D6D6;
+    padding: 0.5em;
+}
