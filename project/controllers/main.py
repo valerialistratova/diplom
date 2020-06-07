@@ -82,6 +82,32 @@ def get_client_data():
     return res
 
 
+@app.route('/login-android', methods=['POST'])
+def loginAndroid(uid=None):
+    error = None
+    uid = request.form['email']
+    if valid_login(uid, request.form['password'], True):
+        current_user = Users.Users.query.filter_by(email=uid).first()
+        return jsonify(userId=current_user.user_id,success=True)
+    else:
+        return jsonify(success=False)
+
+
+
+@app.route('/save-progress-android', methods=['POST'])
+def saveProgressAndroid():
+    book_id = request.form['book_id']
+    device_id = request.form['device_id']
+    datetime = request.form['datetime']
+    progress = request.form['progress']
+
+    log = Log.Log(device_id, book_id, datetime, progress)
+
+    db.session.add(log)
+    db.session.commit()
+    return jsonify(success=True)
+
+
 @app.route('/login', methods=['POST', 'GET'])
 @app.route('/login/<int:uid>', endpoint='login-with-id')
 def login(uid=None):
@@ -220,15 +246,16 @@ def get_monthly_history():
                   .outerjoin(subquery_rating, (Books.Books.book_id == subquery_rating.c.book_id))
                   .filter(Books.Books.book_id == book.book_id)).first()
 
-        print book
+        print book.keys()
 
-        book.progress = int(book.progress)
+        newBook = {'Books': book.Books, 'progress': book.progress, 'start': book.start, 'finish': book.finish, 'rating': book.rating}
+
         if book.start:
             key = book.start.strftime("%B, %Y")
-            book.start = book.start.strftime('%d %B').decode('1251')
+            newBook['start'] = book.start.strftime('%d %B').decode('1251')
 
         if book.finish:
-            book.finish = book.finish.strftime('%d %B').decode('1251')
+            newBook['finish'] = book.finish.strftime('%d %B').decode('1251')
 
         if key not in detailed_books_list:
             detailed_books_list[key] = []
@@ -306,6 +333,7 @@ def valid_login(uid, password, by_email):
 
     if current_user.password == password:
         session['user_id'] = current_user.user_id
+
         return True
     else:
         return False

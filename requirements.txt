@@ -4,5 +4,5 @@ Jinja2==2.7
 Flask-DebugToolbar==0.8.0
 pymysql==0.6.2
 Flask-SQLAlchemy==1.0
-
+Werkzeug==0.16.1
 
