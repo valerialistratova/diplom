@@ -11,7 +11,6 @@ from flask import render_template, request, jsonify, send_file, session, redirec
 import hashlib
 
 
-
 #### controllers
 
 # @app.route('/', methods=['POST', 'GET'])
@@ -61,7 +60,6 @@ def bookmarks():
         return redirect(url_for('login'))
 
 
-
 @app.route('/recommendation', methods=['POST'])
 def recommendation():
     if is_logged():
@@ -88,10 +86,9 @@ def loginAndroid(uid=None):
     uid = request.form['email']
     if valid_login(uid, request.form['password'], True):
         current_user = Users.Users.query.filter_by(email=uid).first()
-        return jsonify(userId=current_user.user_id,success=True)
+        return jsonify(userId=current_user.user_id, success=True)
     else:
         return jsonify(success=False)
-
 
 
 @app.route('/save-progress-android', methods=['POST'])
@@ -156,15 +153,15 @@ def not_found(error):
 @app.route('/save-rate', methods=['POST'])
 def save_rate():
     if is_logged():
-        rated = UsersBooksRatings.UsersBooksRatings.query\
-            .filter(UsersBooksRatings.UsersBooksRatings.user_id == session['user_id'])\
+        rated = UsersBooksRatings.UsersBooksRatings.query \
+            .filter(UsersBooksRatings.UsersBooksRatings.user_id == session['user_id']) \
             .filter(UsersBooksRatings.UsersBooksRatings.book_id == request.form['book_id']).first()
 
         if rated is not None:
             rated.rating = request.form['rate']
         else:
-            rated = UsersBooksRatings.UsersBooksRatings(session['user_id'], request.form['book_id'], request.form['rate'])
-
+            rated = UsersBooksRatings.UsersBooksRatings(session['user_id'], request.form['book_id'],
+                                                        request.form['rate'])
 
         db.session.add(rated)
         db.session.commit()
@@ -207,30 +204,30 @@ def get_monthly_history():
     current_user_books = get_read_books()
 
     subquery_start = (db.session.query(
-                      Log.Log.book_id,
-                      Log.Log.datetime.label('start')
+        Log.Log.book_id,
+        Log.Log.datetime.label('start')
     ).filter(Log.Log.progress <= min_progress)
-     .group_by(Log.Log.book_id).order_by(Log.Log.progress)
-    ).subquery()
+                      .group_by(Log.Log.book_id).order_by(Log.Log.progress)
+                      ).subquery()
 
     subquery_finish = (db.session.query(
-                       Log.Log.book_id,
-                       Log.Log.datetime.label('finish')
+        Log.Log.book_id,
+        Log.Log.datetime.label('finish')
     ).filter(Log.Log.progress >= max_progress)
-     .group_by(Log.Log.book_id).order_by(Log.Log.progress.desc())
-    ).subquery()
+                       .group_by(Log.Log.book_id).order_by(Log.Log.progress.desc())
+                       ).subquery()
 
     subquery_progress = (db.session.query(
-                         Log.Log.book_id,
-                         (func.max(Log.Log.progress).label('progress'))
+        Log.Log.book_id,
+        (func.max(Log.Log.progress).label('progress'))
     ).group_by(Log.Log.book_id)
-    ).subquery()
+                         ).subquery()
 
     subquery_rating = (db.session.query(
-                       UsersBooksRatings.UsersBooksRatings.book_id.label('book_id'),
-                       UsersBooksRatings.UsersBooksRatings.rating.label('rating')
+        UsersBooksRatings.UsersBooksRatings.book_id.label('book_id'),
+        UsersBooksRatings.UsersBooksRatings.rating.label('rating')
     ).filter(UsersBooksRatings.UsersBooksRatings.user_id == session['user_id'])
-    ).subquery()
+                       ).subquery()
 
     detailed_books_list = OrderedDict()
     for book in current_user_books:
@@ -240,15 +237,16 @@ def get_monthly_history():
                                  subquery_finish.c.finish,
                                  subquery_progress.c.progress,
                                  subquery_rating.c.rating)
-                  .outerjoin(subquery_start, (Books.Books.book_id == subquery_start.c.book_id))
-                  .outerjoin(subquery_finish, (Books.Books.book_id == subquery_finish.c.book_id))
-                  .outerjoin(subquery_progress, (Books.Books.book_id == subquery_progress.c.book_id))
-                  .outerjoin(subquery_rating, (Books.Books.book_id == subquery_rating.c.book_id))
-                  .filter(Books.Books.book_id == book.book_id)).first()
+                .outerjoin(subquery_start, (Books.Books.book_id == subquery_start.c.book_id))
+                .outerjoin(subquery_finish, (Books.Books.book_id == subquery_finish.c.book_id))
+                .outerjoin(subquery_progress, (Books.Books.book_id == subquery_progress.c.book_id))
+                .outerjoin(subquery_rating, (Books.Books.book_id == subquery_rating.c.book_id))
+                .filter(Books.Books.book_id == book.book_id)).first()
 
         print book.keys()
 
-        newBook = {'Books': book.Books, 'progress': book.progress, 'start': book.start, 'finish': book.finish, 'rating': book.rating}
+        newBook = {'Books': book.Books, 'progress': book.progress, 'start': book.start, 'finish': book.finish,
+                   'rating': book.rating}
 
         if book.start:
             key = book.start.strftime("%B, %Y")
@@ -271,56 +269,59 @@ def get_read_books(user_id=None):
     if user_id is None:
         user_id = session['user_id']
 
-    books = Log.Log.query\
-                .filter(Log.Log.device_id == user_id,  Log.Log.datetime >= date,
-                        Log.Log.progress <= 10)\
-                .group_by(Log.Log.book_id)\
-                .order_by(Log.Log.datetime.desc())\
-                .all()
+    books = Log.Log.query \
+        .filter(Log.Log.device_id == user_id, Log.Log.datetime >= date,
+                Log.Log.progress <= 10) \
+        .group_by(Log.Log.book_id) \
+        .order_by(Log.Log.datetime.desc()) \
+        .all()
 
     return books
 
 
 def get_recommended():
-
-    # print calculate_similar_items(get_data_for_recommendations())
+    items = calculate_similar_items(get_data_for_recommendations())
+    print items
+    books2 = items
 
     subquery_faved = (db.session.query(
-                      BooksUsers.BooksUsers.id.label('faved_id'),
-                      BooksUsers.BooksUsers.bookmarked_id.label('bookmarked_id')
+        BooksUsers.BooksUsers.id.label('faved_id'),
+        BooksUsers.BooksUsers.bookmarked_id.label('bookmarked_id')
     ).filter(BooksUsers.BooksUsers.user_id == session['user_id'])).subquery()
 
     user_books = get_read_books()
-    user_books_ids = []
-    for book in user_books:
-        user_books_ids.append(book.book_id)
+    not_similar_books = []
+    for book in books2:
+        for similar_book in books2[book]:
+            if similar_book[0] < 0.5:
+                not_similar_books.append(similar_book[1])
 
     books = (db.session.query(Books.Books,
                               subquery_faved.c.faved_id)
-                  .outerjoin(subquery_faved, (Books.Books.book_id == subquery_faved.c.bookmarked_id))
-                  .filter(not_(Books.Books.book_id.in_(user_books_ids)))
-                  .group_by(Books.Books.book_id)).all()
+             .outerjoin(subquery_faved, (Books.Books.book_id == subquery_faved.c.bookmarked_id))
+             # not in user_books_ids
+             .filter(not_(Books.Books.book_id.in_(not_similar_books)))
+             .group_by(Books.Books.book_id)).all()
 
     return books
 
 
 def get_user_rates(user_id):
-    rates = UsersBooksRatings.UsersBooksRatings.query.filter(UsersBooksRatings.UsersBooksRatings.user_id == user_id).all()
+    rates = UsersBooksRatings.UsersBooksRatings.query.filter(
+        UsersBooksRatings.UsersBooksRatings.user_id == user_id).all()
     return rates
 
 
 def get_bookmarked():
-
     subquery_faved = (db.session.query(
-                      BooksUsers.BooksUsers.id.label('faved_id'),
-                      BooksUsers.BooksUsers.bookmarked_id.label('bookmarked_id')
+        BooksUsers.BooksUsers.id.label('faved_id'),
+        BooksUsers.BooksUsers.bookmarked_id.label('bookmarked_id')
     ).filter(BooksUsers.BooksUsers.user_id == session['user_id'])).subquery()
-
 
     books = (db.session.query(Books.Books,
                               subquery_faved.c.faved_id)
-                  .join(subquery_faved, (Books.Books.book_id == subquery_faved.c.bookmarked_id))
-                  .group_by(Books.Books.book_id)).all()
+             .join(subquery_faved, (Books.Books.book_id == subquery_faved.c.bookmarked_id))
+             .group_by(Books.Books.book_id)).all()
 
     return books
 
@@ -346,10 +347,11 @@ def log_user_in():
 
 def subtract_years(dt, years):
     try:
-        dt = dt.replace(year=dt.year-years)
+        dt = dt.replace(year=dt.year - years)
     except ValueError:
-        dt = dt.replace(year=dt.year-years, day=dt.day-1)
+        dt = dt.replace(year=dt.year - years, day=dt.day - 1)
     return dt
+
 
 def is_logged():
     return session['user_id'] is not None
@@ -389,18 +391,28 @@ def prepare_rates(rates):
 
 # Возвращает оценку подобия book1 и book2 на основе расстояния
 def sim_distance(prefs, book1, book2):
+    # prefs
+    # {bookId2: {personId5: rate, personId: rate}}
     # Получить список предметов, оцененных обоими
     si = {}
+    # prefs[book1]
+    # {5: 1, 7: 1}
     for item in prefs[book1]:
+        # item
+        # 5
         if item in prefs[book2]:
-            si[item] = 1
+            si[item] = 1  # есть похожие
     # Если нет ни одной общей оценки, вернуть 0
     if len(si) == 0:
         return 0
     # Сложить квадраты разностей
-    sum_of_squares = sum([pow(prefs[book1][item] - prefs[book2][item], 2)
-                          for item in prefs[book1] if item in prefs[book2]])
-    return 1 / (1 + sum_of_squares)
+    # bookID1: [person 1: rate 1, 2: 0, 3: -1, 4: 0]
+    # 2: [1: 0, 2: -1]
+    sum_of_squares = sum([pow(prefs[book1][person] - prefs[book2][person], 2)
+                          for person in prefs[book1] if person in prefs[book2]])
+
+    result = 1.0 / (1.0 + sum_of_squares)
+    return result
 
 
 def transform_prefs(prefs):
@@ -408,38 +420,42 @@ def transform_prefs(prefs):
     for person in prefs:
         for item in prefs[person]:
             result.setdefault(item, {})
-    # Обменять местами человека и книгу
-    result[item][person] = prefs[person][item]
+            # Обменять местами человека и книгу
+            result[item][person] = prefs[person][item]
+
     return result
 
 
 def calculate_similar_items(prefs, n=10):
+    # print prefs
+    # prefs - rates
+    # {1: {1: 0, 2: 1, 3: 0}, 2: {... }
     # Создать словарь, содержащий для каждого образца те образцы, которые
     # больше всего похожи на него.
     result = {}
     # Обратить матрицу предпочтений, чтобы строки соответствовали образцам
     item_prefs = transform_prefs(prefs)
+    # item_prefs
+    # {bookId: {personId: rate, personId: rate}}
     c = 0
     for item in item_prefs:
         # Обновление состояния для больших наборов данных
         c += 1
-        if c % 100 == 0:
-            print "%d / %d" % (c, len(item_prefs))
+        # print "%d / %d" % (c, len(item_prefs))
+        # Найти образцы, максимально похожие на данный
+        scores = top_matches(item_prefs, item, n=n, similarity=sim_distance)
+        result[item] = scores
 
-    # Найти образцы, максимально похожие на данный
-    scores = top_matches(item_prefs, item, n=n, similarity=sim_distance)
-    result[item] = scores
     return result
 
 
-def top_matches(prefs, person, n=5, similarity=None):
-    scores = [(similarity(prefs, person, other), other)
-              for other in prefs if other != person]
+def top_matches(prefs, book_id, n=5, similarity=None):
+    # prefs
+    # {bookId: {personId: rate, personId: rate}}
+    scores = [(similarity(prefs, book_id, other), other)
+              for other in prefs if other != book_id]
+    # [(similarity: 1.0, bookId: 23), (0.5, 22)]
     # Отсортировать список по убыванию оценок
     scores.sort()
     scores.reverse()
     return scores[0:n]
-
-
-
-
